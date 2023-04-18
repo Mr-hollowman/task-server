@@ -1,8 +1,8 @@
-import Property from "../models/project.js";
+import Project from "../models/project.js";
 import User from '../models/User.js'
 import mongoose from "mongoose";
 
-const createProperty = async (req, res) => {
+const createProject = async (req, res) => {
 
     try {
         const { title, description, projectType, location, email } = req.body;
@@ -16,7 +16,7 @@ const createProperty = async (req, res) => {
 
         if (!user) throw new Error("User not found")
 
-        const newProperty = await Property.create({
+        const newProject = await Project.create({
             title,
             description,
             projectType,
@@ -24,11 +24,42 @@ const createProperty = async (req, res) => {
             creator: user._id
         })
 
-        user.allProperties.push(newProperty._id);
+        user.allProjects.push(newProject._id);
         // await user.save({ session });
 
         // await session.commitTransaction();
-        res.status(200).json({ message: "property added successfully" })
+        res.status(200).json({ message: "project added successfully" })
+
+    } catch (error) {
+        res.status(500).json({ message: error.message })
+    }
+}
+
+const getAllProjects = async (req, res) => {
+    const { _end, _order, _start, _sort, title_like = "", projectType = "" } = req.query
+
+    const query = {};
+
+    if (projectType != "") {
+        query.projectType = projectType
+    }
+
+    if (title_like) {
+        query.title = { $regex: title_like, $options: "i" }
+    }
+
+    try {
+        const count = await Project.countDocuments({ query })
+        const projects = await Project
+            .find(query)
+            .limit(_end)
+            .skip(_start)
+            .sort({ [_sort]: _order })
+
+        res.header('x-total-count', count);
+        res.header("Access-Control-Expose-Headers", "x-total-count");
+
+        res.status(200).json(projects)
 
     } catch (error) {
         res.status(500).json({ message: error.message })
@@ -36,5 +67,6 @@ const createProperty = async (req, res) => {
 }
 
 export {
-    createProperty,
+    createProject,
+    getAllProjects,
 }
