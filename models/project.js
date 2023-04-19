@@ -7,6 +7,6 @@ const projectSchema = new mongoose.Schema({
     location: { type: String, required: true },
     projectType: { type: String, required: true },
     creator: { type: mongoose.Schema.Types.ObjectId, ref: "User" }
-})
+},{timestamps: true})
 
 export default mongoose.model("Project", projectSchema)
