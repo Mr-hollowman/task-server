@@ -7,12 +7,12 @@ const createProject = async (req, res) => {
     try {
         const { title, description, projectType, location, email } = req.body;
 
-        //start a new session
-        // const session = await mongoose.startSession();
-        // session.startTransaction();
+        // start a new session
+        const session = await mongoose.startSession();
+        session.startTransaction();
 
-        // const user = await User.findOne({ email }).session(session)
-        const user = await User.findOne({ email })
+        const user = await User.findOne({ email }).session(session)
+        // const user = await User.findOne({ email })
 
         if (!user) throw new Error("User not found")
 
@@ -23,11 +23,12 @@ const createProject = async (req, res) => {
             location,
             creator: user._id
         })
+        console.log(newProject,"njkhjk");
 
         user.allProjects.push(newProject._id);
-        // await user.save({ session });
+        await user.save({ session });
 
-        // await session.commitTransaction();
+        await session.commitTransaction();
         res.status(200).json({ message: "project added successfully" })
 
     } catch (error) {
