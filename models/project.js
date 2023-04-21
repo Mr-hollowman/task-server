@@ -7,6 +7,7 @@ const projectSchema = new mongoose.Schema({
     price:{type: String, required: true},
     location: { type: String, required: true },
     projectType: { type: String, required: true },
+    tag: { type: String, required: true },
     creator: { type: mongoose.Schema.Types.ObjectId, ref: "User" }
 },{timestamps: true})
 

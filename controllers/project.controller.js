@@ -1,11 +1,21 @@
 import Project from "../models/project.js";
 import User from '../models/User.js'
 import mongoose from "mongoose";
+import * as dotenv from 'dotenv'
+import { v2 as cloudinary } from 'cloudinary';
+
+dotenv.config()
+
+cloudinary.config({
+    cloud_name: process.env.CLOUDINARY_CLOUD_NAME,
+    api_key: process.env.CLOUDINARY_API_KEY,
+    api_secret: process.env.CLOUDINARY_API_SECRET
+})
 
 const createProject = async (req, res) => {
 
     try {
-        const { title, description, projectType, location, email } = req.body;
+        const { title, description, projectType, location, email, tag, img } = req.body;
 
         // start a new session
         const session = await mongoose.startSession();
@@ -15,12 +25,15 @@ const createProject = async (req, res) => {
         // const user = await User.findOne({ email })
 
         if (!user) throw new Error("User not found")
+        const photoUrl = await cloudinary.uploader.upload(photo);
 
         const newProject = await Project.create({
             title,
             description,
             projectType,
             location,
+            tag,
+            img: photoUrl.url,
             creator: user._id
         })
         console.log(newProject,"njkhjk");
