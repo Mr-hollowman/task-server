@@ -15,7 +15,7 @@ cloudinary.config({
 const createProject = async (req, res) => {
 
     try {
-        const { title, description, projectType, location, email, tag, img } = req.body;
+        const { title, description, projectType, location, email, tag,  price } = req.body;
 
         // start a new session
         const session = await mongoose.startSession();
@@ -25,7 +25,6 @@ const createProject = async (req, res) => {
         // const user = await User.findOne({ email })
 
         if (!user) throw new Error("User not found")
-        const photoUrl = await cloudinary.uploader.upload(photo);
 
         const newProject = await Project.create({
             title,
@@ -33,7 +32,7 @@ const createProject = async (req, res) => {
             projectType,
             location,
             tag,
-            img: photoUrl.url,
+            price,
             creator: user._id
         })
         console.log(newProject,"njkhjk");

@@ -8,6 +8,7 @@ const projectSchema = new mongoose.Schema({
     location: { type: String, required: true },
     projectType: { type: String, required: true },
     tag: { type: String, required: true },
+    price: { type: Number, required: true },
     creator: { type: mongoose.Schema.Types.ObjectId, ref: "User" }
 },{timestamps: true})
 
