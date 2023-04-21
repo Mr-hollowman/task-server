@@ -5,7 +5,7 @@ import mongoose from "mongoose";
 const createProject = async (req, res) => {
 
     try {
-        const { title, description, projectType, location, email, tag,  startPrice, endPrice } = req.body;
+        const { title, description, projectType, location, email, tag, startPrice, endPrice } = req.body;
 
         // start a new session
         const session = await mongoose.startSession();
@@ -25,7 +25,7 @@ const createProject = async (req, res) => {
             endPrice,
             creator: user._id
         })
-        console.log(newProject,"njkhjk");
+        console.log(newProject, "njkhjk");
 
         user.allProjects.push(newProject._id);
         await user.save({ session });
@@ -69,7 +69,26 @@ const getAllProjects = async (req, res) => {
     }
 }
 
+const getProjectDetail = async (req, res) => {
+    const { id } = req.query
+    // console.log(req);
+    console.log(id,"id");
+    try {
+        const project = await Project.findById({ _id: id })
+
+        if (!project) {
+            return res.status(404).json({ message: "data not found" })
+        }
+        res.status(200).json(project)
+
+    } catch (error) {
+        res.status(500).json({ message: error.message })
+    }
+}
+
+
 export {
     createProject,
     getAllProjects,
+    getProjectDetail
 }
