@@ -6,6 +6,7 @@ const UserSchema = new mongoose.Schema({
     type:{type: String, required: true},
     password:{type: String, required: true},
     img:{type: String,},
+    phone:{type:Number},
     allProjects:[{type:mongoose.Schema.Types.ObjectId, ref:"Project"}]
 },{timestamps: true})
 
