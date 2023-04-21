@@ -20,7 +20,6 @@ const createProject = async (req, res) => {
             endPrice,
             creator: user._id
         })
-        console.log(newProject, "njkhjk");
 
         user.allProjects.push(newProject._id);
         await user.save({ session });
@@ -72,12 +71,10 @@ const getProjectDetail = async (req, res) => {
 
 const update = async (req, res) => {
     const { id } = req.query
-    console.log(req.body,"req body");
     try {
         const existing = await Project.findById({_id: id})
         existing.bits.push({...req.body})
         const project = await Project.findOneAndUpdate({ _id: id }, {$set:{...existing}},{new:true})
-        console.log(project);
 
         if (!project) {
             return res.status(404).json({ message: "data not found" })
