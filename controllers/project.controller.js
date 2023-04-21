@@ -71,10 +71,27 @@ const getAllProjects = async (req, res) => {
 
 const getProjectDetail = async (req, res) => {
     const { id } = req.query
-    // console.log(req);
-    console.log(id,"id");
     try {
         const project = await Project.findById({ _id: id })
+
+        if (!project) {
+            return res.status(404).json({ message: "data not found" })
+        }
+        res.status(200).json(project)
+
+    } catch (error) {
+        res.status(500).json({ message: error.message })
+    }
+}
+
+const update = async (req, res) => {
+    const { id } = req.query
+    console.log(req.body,"req body");
+    try {
+        const existing = await Project.findById({_id: id})
+        existing.bits.push({...req.body})
+        const project = await Project.findOneAndUpdate({ _id: id }, {$set:{...existing}},{new:true})
+        console.log(project);
 
         if (!project) {
             return res.status(404).json({ message: "data not found" })
@@ -90,5 +107,6 @@ const getProjectDetail = async (req, res) => {
 export {
     createProject,
     getAllProjects,
-    getProjectDetail
+    getProjectDetail,
+    update,
 }

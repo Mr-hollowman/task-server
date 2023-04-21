@@ -10,6 +10,7 @@ const projectSchema = new mongoose.Schema({
     tag: { type: String, required: true },
     startPrice: { type: Number, required: true },
     endPrice: { type: Number, required: true },
+    bits:{type:Array},
     creator: { type: mongoose.Schema.Types.ObjectId, ref: "User" }
 },{timestamps: true})
 
