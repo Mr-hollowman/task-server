@@ -4,6 +4,10 @@ import { createError } from "../error.js";
 import jwt from "jsonwebtoken";
 export const signup = async (req, res, next) => {
     try {
+        const user = await User.findOne({ userName: req.body.userName });
+        const user2 = await User.findOne({ email: req.body.email });
+        if(user) return next(createError(500, "UserName is already registered, please use unique name"))
+        if(user2) return next(createError(500, "Email Id is already registered, please use unique Mail id"))
         const salt = bcrypt.genSaltSync(10);
         const hash = bcrypt.hashSync(req.body.password, salt);
         const newUser = new User({ ...req.body, password: hash });
